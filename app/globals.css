@@ -1,26 +1,142 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Palet AstraPay: deep blue + teal (§10) */
+  --color-deep: #0e5a8a;
+  --color-deep-dark: #0a4368;
+  --color-deep-darker: #072f4b;
+  --color-teal: #12a0b8;
+  --color-teal-light: #e3f5f8;
+  --color-mist: #f1f6f9;
+  --color-gold: #f5a623;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #0a4368;
+  color: #14202b;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+}
+
+/* ----- animasi mikro ----- */
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0.4;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(18, 160, 184, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(18, 160, 184, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.anim-rise {
+  animation: rise-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-pop {
+  animation: pop-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-pulse-ring {
+  animation: pulse-ring 1.4s ease-out infinite;
+}
+
+/* slider plafon */
+input[type="range"].astra-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    #12a0b8 0%,
+    #12a0b8 var(--fill, 50%),
+    #dbe7ee var(--fill, 50%),
+    #dbe7ee 100%
+  );
+  outline: none;
+}
+
+input[type="range"].astra-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid #12a0b8;
+  box-shadow: 0 2px 8px rgba(14, 90, 138, 0.35);
+  cursor: pointer;
+}
+
+input[type="range"].astra-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 3px solid #12a0b8;
+  box-shadow: 0 2px 8px rgba(14, 90, 138, 0.35);
+  cursor: pointer;
+}
+
+/* scrollbar halus di dalam frame */
+.frame-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(14, 90, 138, 0.25) transparent;
+}
+.frame-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+.frame-scroll::-webkit-scrollbar-thumb {
+  background: rgba(14, 90, 138, 0.25);
+  border-radius: 9999px;
 }
