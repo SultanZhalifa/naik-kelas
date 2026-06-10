@@ -7,6 +7,13 @@
 // Dipilih via env USE_SANDBOX=true. Jika Sandbox error/timeout, otomatis
 // fallback ke Mock — demo tidak pernah gagal.
 //
+// Catatan riset (2026-06-11): docs.astrapay.com publik hanya memuat ringkasan
+// produk; spesifikasi endpoint API digerbang dan akan diberikan bersama
+// kredensial Sandbox dari panitia. Karena QRIS Indonesia umumnya mengikuti
+// standar SNAP BI, parser response di bawah sudah toleran terhadap variasi
+// nama field (qrString / qr_string / qrContent / payload) dan semua path
+// endpoint bisa dioverride via env tanpa mengubah kode.
+//
 // Konfigurasi (Vercel env vars / .env.local — jangan commit secret):
 //   USE_SANDBOX=true|false
 //   ASTRAPAY_BASE_URL=https://sandbox.astrapay.com   (sesuai kredensial panitia)
