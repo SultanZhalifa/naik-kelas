@@ -25,7 +25,7 @@ export default function LoginScreen({
           merchant demo
         </h2>
         <p className="mt-2 text-xs leading-relaxed text-sky-100/80">
-          4 persona dengan ±90 hari riwayat transaksi sintetis. Skor dihitung
+          5 persona dengan ±90 hari riwayat transaksi sintetis. Skor dihitung
           nyata dari data — bukan angka mati.
         </p>
       </div>

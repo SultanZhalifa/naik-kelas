@@ -1,22 +1,23 @@
 "use client";
 
 import { useMemo } from "react";
+import { mulberry32 } from "@/lib/rng";
 
 const COLORS = ["#12a0b8", "#0e5a8a", "#f5a623", "#7ed3c0", "#ffd166", "#ff8fa3"];
 
 export default function Confetti({ count = 28 }: { count?: number }) {
-  const pieces = useMemo(
-    () =>
-      Array.from({ length: count }, (_, i) => ({
-        left: Math.random() * 100,
-        delay: Math.random() * 0.8,
-        duration: 2 + Math.random() * 1.6,
-        size: 6 + Math.random() * 7,
-        color: COLORS[i % COLORS.length],
-        round: Math.random() > 0.5,
-      })),
-    [count]
-  );
+  // PRNG deterministik agar render murni (posisi stabil antar re-render)
+  const pieces = useMemo(() => {
+    const rng = mulberry32(777);
+    return Array.from({ length: count }, (_, i) => ({
+      left: rng() * 100,
+      delay: rng() * 0.8,
+      duration: 2 + rng() * 1.6,
+      size: 6 + rng() * 7,
+      color: COLORS[i % COLORS.length],
+      round: rng() > 0.5,
+    }));
+  }, [count]);
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">

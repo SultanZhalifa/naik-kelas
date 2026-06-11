@@ -4,7 +4,7 @@
 
 import { useMemo, useState } from "react";
 import type { AppState } from "@/lib/types";
-import { formatRp } from "@/lib/format";
+import { formatRp, formatRpShort } from "@/lib/format";
 import { REPAYMENT_RATE } from "@/lib/engine";
 import { effectiveFeeRate, POINTS_REDEEM_COST } from "@/lib/state";
 
@@ -74,6 +74,25 @@ export default function DisburseScreen({
           <div className="mt-1.5 flex justify-between text-[10px] font-semibold text-slate-400">
             <span>{formatRp(STEP)}</span>
             <span>{formatRp(limit)}</span>
+          </div>
+
+          {/* nominal cepat — demo tak perlu menggeser slider presisi */}
+          <div className="mt-3 flex gap-2">
+            {[
+              ...[500_000, 1_000_000].filter((v) => v < limit),
+              limit,
+            ].map((v) => (
+              <button
+                key={v}
+                disabled={busy}
+                onClick={() => setAmount(v)}
+                className={`flex-1 rounded-xl py-2 text-[11px] font-bold transition active:scale-95 ${
+                  amount === v ? "bg-deep text-white" : "bg-mist text-slate-600"
+                }`}
+              >
+                {v === limit ? "Maks" : formatRpShort(v)}
+              </button>
+            ))}
           </div>
 
           {canRedeem && (

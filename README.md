@@ -15,8 +15,10 @@ plafon naik + **AstraPoints**.
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-npm test           # 17 unit test: rumus engine + verifikasi tier 4 persona
-node scripts/e2e.mjs   # uji hero flow lengkap (server harus jalan)
+npm test           # 20 unit test: rumus engine + verifikasi tier 5 persona
+node scripts/e2e.mjs        # uji hero flow lengkap via API (server harus jalan)
+node scripts/edge-tests.mjs # 21 uji edge-case API + sweep semua persona
+node scripts/ui-flow.mjs    # uji 9 tahap UI di browser + screenshot ke shots/
 ```
 
 ## Skrip demo (<8 menit)

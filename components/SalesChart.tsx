@@ -17,7 +17,8 @@ export default function SalesChart({ transactions }: { transactions: Tx[] }) {
   }, []);
 
   const weeks = useMemo(() => {
-    const now = Date.now();
+    // acuan waktu dari transaksi terbaru agar perhitungan murni & deterministik
+    const now = transactions.reduce((m, tx) => Math.max(m, tx.ts), 0);
     const buckets = new Array<number>(13).fill(0);
     for (const tx of transactions) {
       if (tx.type !== "QRIS_IN") continue;

@@ -159,8 +159,8 @@ export default function DashboardScreen({
           </div>
           <input
             inputMode="numeric"
-            placeholder="Atau ketik nominal lain, mis. 750000"
-            value={custom}
+            placeholder="Atau ketik nominal lain, mis. 750.000"
+            value={custom ? Number(custom).toLocaleString("id-ID") : ""}
             onChange={(e) => setCustom(e.target.value.replace(/\D/g, ""))}
             className="mt-2 w-full rounded-xl border border-slate-200 bg-mist px-3 py-2.5 text-xs font-semibold text-deep placeholder:font-normal placeholder:text-slate-400 focus:border-teal focus:outline-none"
           />

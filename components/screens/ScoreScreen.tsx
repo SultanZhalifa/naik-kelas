@@ -73,14 +73,12 @@ export default function ScoreScreen({
               bulan depan ya!
             </p>
           )}
-          {(hasActiveLoan || state.loan) && (
-            <button
-              onClick={onDashboard}
-              className="mt-2 w-full rounded-2xl border border-slate-200 py-3 text-sm font-bold text-deep transition active:scale-[0.98]"
-            >
-              Lihat dashboard arus kas
-            </button>
-          )}
+          <button
+            onClick={onDashboard}
+            className="mt-2 w-full rounded-2xl border border-slate-200 py-3 text-sm font-bold text-deep transition active:scale-[0.98]"
+          >
+            Lihat dashboard arus kas
+          </button>
         </div>
 
         <div className="anim-rise mt-4 rounded-3xl bg-white p-5 shadow-[0_12px_32px_rgba(14,90,138,0.12)]" style={{ animationDelay: "120ms" }}>
