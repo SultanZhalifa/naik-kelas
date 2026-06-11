@@ -21,6 +21,7 @@ export function createSession(personaId: PersonaId, now = Date.now()): AppState 
     loansRepaidOnTime: 0,
     transactions,
     loan: null,
+    loanHistory: [],
     score,
     provider: "mock",
   };
@@ -76,6 +77,11 @@ export function applyDisbursement(
       ...state,
       balance: state.balance + amount,
       points: redeem ? state.points - POINTS_REDEEM_COST : state.points,
+      // pinjaman lunas sebelumnya masuk ledger
+      loanHistory:
+        state.loan?.status === "LUNAS"
+          ? [...(state.loanHistory ?? []), state.loan]
+          : (state.loanHistory ?? []),
       loan: {
         principal: amount,
         feeRate,
@@ -125,7 +131,12 @@ export function applyQrisPayment(
     next = {
       ...next,
       balance: next.balance + (amount - cut),
-      loan: { ...next.loan, outstanding, status: lunas ? "LUNAS" : "ACTIVE" },
+      loan: {
+        ...next.loan,
+        outstanding,
+        status: lunas ? "LUNAS" : "ACTIVE",
+        ...(lunas ? { paidAt: now } : {}),
+      },
     };
     if (cut > 0) {
       next.transactions = [

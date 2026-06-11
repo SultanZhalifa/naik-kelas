@@ -143,6 +143,52 @@ export default function App() {
     [state, busy, fail, showToast]
   );
 
+  // Panel demo: 5 pembayaran kecil beruntun — split repayment terlihat bekerja
+  // lintas banyak transaksi, seperti hari jualan sungguhan.
+  const busyDay = useCallback(async () => {
+    if (!state || busy) return;
+    setBusy(true);
+    try {
+      let cur = state;
+      let totalIn = 0;
+      let totalCut = 0;
+      let celeb: Celebration | null = null;
+      for (let i = 0; i < 5; i++) {
+        const amount = Math.round((50_000 + Math.random() * 350_000) / 500) * 500;
+        const data = await api<{
+          state: AppState;
+          cut: number;
+          celebration: Celebration | null;
+        }>("/api/qris/pay", { state: cur, amount });
+        cur = data.state;
+        totalIn += amount;
+        totalCut += data.cut;
+        celeb = data.celebration ?? celeb;
+        setState(cur);
+        showToast(
+          `⚡ Pembeli ${i + 1}/5 · +${formatRp(amount)}${
+            data.cut > 0 ? ` · auto-cicil ${formatRp(data.cut)}` : ""
+          }`
+        );
+        if (data.celebration) break;
+        await sleep(600);
+      }
+      showToast(
+        totalCut > 0
+          ? `⚡ Hari ramai: ${formatRp(totalIn)} masuk · ${formatRp(totalCut)} otomatis menyicil`
+          : `⚡ Hari ramai: ${formatRp(totalIn)} masuk saldo`
+      );
+      if (celeb) {
+        await sleep(650);
+        setCelebration(celeb);
+      }
+    } catch (err) {
+      fail(err);
+    } finally {
+      setBusy(false);
+    }
+  }, [state, busy, fail, showToast]);
+
   const reset = useCallback(async () => {
     if (!state) return;
     setBusy(true);
@@ -210,6 +256,7 @@ export default function App() {
             setScreen("score");
           }}
           onApplyAgain={() => setScreen("disburse")}
+          onBusyDay={busyDay}
         />
       )}
 

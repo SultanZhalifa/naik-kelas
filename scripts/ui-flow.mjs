@@ -87,5 +87,26 @@ await page.getByRole("button", { name: /Tukar 250 AstraPoints/ }).click();
 await page.waitForTimeout(400);
 await frame.screenshot({ path: "shots/10-disburse-points.png" });
 
+console.log("8. Cairkan pinjaman ke-2 + simulasi hari ramai…");
+await page.getByRole("button", { name: /^Cairkan Rp/ }).click();
+await page.getByRole("button", { name: /Simulasi hari ramai/ }).waitFor({ timeout: 10_000 });
+await page.getByRole("button", { name: /Simulasi hari ramai/ }).click();
+await page.waitForTimeout(4500); // 5 pembayaran beruntun
+await frame.screenshot({ path: "shots/11-busy-day.png" });
+
+console.log("9. Cerita inklusi: Dewi (Belum Memenuhi)…");
+await page.getByRole("button", { name: /Reset demo/ }).click();
+await page.getByRole("button", { name: /Dewi · Jastip/ }).waitFor({ timeout: 10_000 });
+await page.getByRole("button", { name: /Dewi · Jastip/ }).click();
+await page.getByRole("button", { name: /Hubungkan data transaksi/ }).click();
+await page.getByText("Kenapa skormu segini?").waitFor({ timeout: 10_000 });
+await page.waitForTimeout(1500);
+await frame.screenshot({ path: "shots/12-dewi-belum-memenuhi.png" });
+// buka audit perhitungan
+await page.getByRole("button", { name: /Audit perhitungan/ }).click();
+await page.getByText("Normalisasi × bobot").scrollIntoViewIfNeeded();
+await page.waitForTimeout(500);
+await frame.screenshot({ path: "shots/13-audit.png" });
+
 await browser.close();
 console.log("✅ Selesai — screenshot di folder shots/");

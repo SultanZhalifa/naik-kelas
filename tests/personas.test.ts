@@ -128,6 +128,10 @@ describe("split repayment & loop reward (§5–§6)", () => {
     expect(r.error).toBeUndefined();
     expect(r.state.points).toBe(250);
     expect(r.state.loan!.pointsUsed).toBe(250);
+    // pinjaman pertama yang lunas masuk ledger
+    expect(r.state.loanHistory).toHaveLength(1);
+    expect(r.state.loanHistory[0].status).toBe("LUNAS");
+    expect(r.state.loanHistory[0].paidAt).toBeDefined();
     expect(r.state.loan!.feeRate).toBeCloseTo(Math.max(baseFee - 0.005, 0.005));
     expect(r.state.loan!.totalDue).toBe(
       Math.round(1_000_000 * (1 + r.state.loan!.feeRate))

@@ -148,6 +148,29 @@ export const PERSONAS: Record<PersonaId, PersonaDef> = {
     },
     expectedScoreRange: [670, 739], // Tumbuh
   },
+  dewi: {
+    profile: makeProfile(
+      "dewi",
+      "Dewi",
+      "Jastip & Jajanan",
+      "🧺",
+      "Baru 3 bulan gabung — jejak masih tipis, sedang dibangun",
+      3,
+      "VERIFIED",
+      0.67, // 2 dari 3 angsuran tepat waktu
+      650_000
+    ),
+    gen: {
+      avgMonthlyQrisSales: 400_000,
+      sellProb: 0.55,
+      txPerDay: [1, 2],
+      dailyNoise: 0.5,
+      growth3m: 0.05,
+      topupsPerMonth: 2,
+      seed: 55,
+    },
+    expectedScoreRange: [300, 579], // Belum Memenuhi — cerita inklusi/pemberdayaan
+  },
 };
 
 export const PERSONA_IDS = Object.keys(PERSONAS) as PersonaId[];

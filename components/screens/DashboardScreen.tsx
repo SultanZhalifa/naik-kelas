@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import type { AppState, Tx } from "@/lib/types";
-import { formatRp, formatRpShort, formatDateTime } from "@/lib/format";
+import { formatRp, formatRpShort, formatDate, formatDateTime } from "@/lib/format";
 import AnimatedNumber from "../AnimatedNumber";
 
 const PRESETS = [100_000, 250_000, 500_000, 1_000_000];
@@ -18,6 +18,7 @@ export default function DashboardScreen({
   onReset,
   onViewScore,
   onApplyAgain,
+  onBusyDay,
 }: {
   state: AppState;
   busy: boolean;
@@ -25,6 +26,7 @@ export default function DashboardScreen({
   onReset: () => void;
   onViewScore: () => void;
   onApplyAgain: () => void;
+  onBusyDay: () => void;
 }) {
   const [amount, setAmount] = useState(250_000);
   const [custom, setCustom] = useState("");
@@ -172,6 +174,14 @@ export default function DashboardScreen({
           </button>
 
           <button
+            onClick={onBusyDay}
+            disabled={busy}
+            className="mt-2 w-full rounded-2xl border-2 border-teal/50 py-3 text-xs font-bold text-teal transition active:scale-[0.98] disabled:opacity-60"
+          >
+            ⚡ Simulasi hari ramai (5 pembayaran beruntun)
+          </button>
+
+          <button
             onClick={onReset}
             disabled={busy}
             className="mt-2 w-full rounded-2xl border border-slate-200 py-2.5 text-xs font-bold text-slate-500 transition active:scale-[0.98]"
@@ -179,6 +189,30 @@ export default function DashboardScreen({
             ↺ Reset demo
           </button>
         </div>
+
+        {/* Riwayat Modal Jalan (ledger) */}
+        {(state.loanHistory ?? []).length > 0 && (
+          <div className="anim-rise rounded-3xl bg-white p-5 shadow-[0_12px_32px_rgba(14,90,138,0.12)]">
+            <h4 className="text-sm font-extrabold text-deep">Riwayat Modal Jalan</h4>
+            <div className="mt-2 divide-y divide-slate-100">
+              {state.loanHistory.map((l, idx) => (
+                <div key={idx} className="flex items-center gap-3 py-2.5 text-xs">
+                  <span className="text-base">✅</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold text-slate-700">
+                      {formatRp(l.principal)} · fee {(l.feeRate * 100).toFixed(1).replace(".", ",")}%
+                      {l.pointsUsed > 0 && " ✦"}
+                    </p>
+                    <p className="text-[10px] text-slate-400">
+                      {formatDate(l.createdAt)} → lunas {l.paidAt ? formatDate(l.paidAt) : "—"}
+                    </p>
+                  </div>
+                  <span className="font-bold text-emerald-600">LUNAS</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Riwayat transaksi */}
         <div className="anim-rise rounded-3xl bg-white p-5 shadow-[0_12px_32px_rgba(14,90,138,0.12)]">

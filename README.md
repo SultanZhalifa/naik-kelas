@@ -37,9 +37,17 @@ node scripts/e2e.mjs   # uji hero flow lengkap (server harus jalan)
    tepat waktu" → **"Ajukan lagi"** dengan plafon baru → aktifkan toggle
    **"Tukar 250 AstraPoints"** → fee turun (mis. 1,2% → 0,7%).
 8. Di layar skor, tunjukkan **"Data di balik skormu"** (grafik omzet mingguan
-   dari transaksi nyata) dan **"Simulasi naik kelas"** (proyeksi what-if yang
-   dihitung live oleh mesin skor yang sama) — amunisi kuat untuk sesi Q&A.
-9. **Reset demo** untuk mengulang.
+   dari transaksi nyata), **"Simulasi naik kelas"** (proyeksi what-if yang
+   dihitung live oleh mesin skor yang sama), dan **"Audit perhitungan"**
+   (data mentah → bobot → kontribusi, bisa dicek dengan kalkulator) — amunisi
+   kuat untuk sesi Q&A.
+9. Opsional: **"⚡ Simulasi hari ramai"** di Panel Demo — 5 pembayaran kecil
+   beruntun, cicilan terpotong otomatis di tiap transaksi.
+10. Untuk cerita inklusi (jika ditanya "yang belum layak bagaimana?"):
+    reset → pilih **Dewi** (baru 3 bulan, skor ~535 "Belum Memenuhi") →
+    perjalanan tier menunjukkan jarak ke Pemula, dan what-if membuktikan
+    jalannya: FIF rapi + omzet naik → skor tembus 580+.
+11. **Reset demo** untuk mengulang.
 
 Kerangka pitch deck + antisipasi Q&A: lihat [PITCH.md](PITCH.md).
 
