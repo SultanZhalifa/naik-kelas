@@ -6,8 +6,11 @@ import { useMemo, useState } from "react";
 import type { AppState } from "@/lib/types";
 import { formatRp } from "@/lib/format";
 import { REPAYMENT_RATE } from "@/lib/engine";
+import { effectiveFeeRate, POINTS_REDEEM_COST } from "@/lib/state";
 
 const STEP = 50_000;
+
+const pct = (r: number) => (r * 100).toFixed(1).replace(".", ",");
 
 export default function DisburseScreen({
   state,
@@ -17,12 +20,15 @@ export default function DisburseScreen({
 }: {
   state: AppState;
   busy: boolean;
-  onDisburse: (amount: number) => void;
+  onDisburse: (amount: number, usePoints: boolean) => void;
   onBack: () => void;
 }) {
   const limit = state.score.limit;
   const [amount, setAmount] = useState(Math.min(limit, Math.max(STEP, Math.round(limit / 2 / STEP) * STEP)));
-  const feeRate = state.score.tier.feeRate;
+  const [usePoints, setUsePoints] = useState(false);
+  const canRedeem = state.points >= POINTS_REDEEM_COST;
+  const baseFeeRate = state.score.tier.feeRate;
+  const feeRate = effectiveFeeRate(baseFeeRate, usePoints && canRedeem);
 
   const totalDue = Math.round(amount * (1 + feeRate));
   // estimasi hari lunas dari omzet harian rata-rata
@@ -70,10 +76,41 @@ export default function DisburseScreen({
             <span>{formatRp(limit)}</span>
           </div>
 
-          <div className="mt-5 space-y-2.5 rounded-2xl bg-mist p-4 text-xs">
+          {canRedeem && (
+            <button
+              onClick={() => setUsePoints((v) => !v)}
+              disabled={busy}
+              className={`mt-5 flex w-full items-center justify-between rounded-2xl border-2 px-4 py-3 text-left transition active:scale-[0.99] ${
+                usePoints ? "border-gold bg-gold/10" : "border-slate-200 bg-white"
+              }`}
+            >
+              <span>
+                <span className="block text-xs font-bold text-deep">
+                  ✦ Tukar {POINTS_REDEEM_COST} AstraPoints
+                </span>
+                <span className="text-[10px] text-slate-500">
+                  Fee turun {pct(baseFeeRate)}% → {pct(effectiveFeeRate(baseFeeRate, true))}% · sisa poinmu{" "}
+                  {state.points - (usePoints ? POINTS_REDEEM_COST : 0)}
+                </span>
+              </span>
+              <span
+                className={`flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 transition ${
+                  usePoints ? "justify-end bg-gold" : "justify-start bg-slate-200"
+                }`}
+              >
+                <span className="h-5 w-5 rounded-full bg-white shadow" />
+              </span>
+            </button>
+          )}
+
+          <div className="mt-4 space-y-2.5 rounded-2xl bg-mist p-4 text-xs">
             <Row label="Pokok" value={formatRp(amount)} />
             <Row
-              label={`Fee ${(feeRate * 100).toFixed(1).replace(".", ",")}%/bln*`}
+              label={
+                usePoints && canRedeem
+                  ? `Fee ${pct(feeRate)}%/bln* (✦ diskon poin)`
+                  : `Fee ${pct(feeRate)}%/bln*`
+              }
               value={formatRp(totalDue - amount)}
             />
             <div className="border-t border-slate-200 pt-2.5">
@@ -89,7 +126,7 @@ export default function DisburseScreen({
           </div>
 
           <button
-            onClick={() => onDisburse(amount)}
+            onClick={() => onDisburse(amount, usePoints && canRedeem)}
             disabled={busy || amount < STEP}
             className="mt-5 w-full rounded-2xl bg-gradient-to-r from-deep to-teal py-3.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-70"
           >

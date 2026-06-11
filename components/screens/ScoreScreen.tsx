@@ -6,6 +6,8 @@ import type { AppState } from "@/lib/types";
 import { formatRp } from "@/lib/format";
 import ScoreGauge from "../ScoreGauge";
 import ExplainBars from "../ExplainBars";
+import SalesChart from "../SalesChart";
+import WhatIf from "../WhatIf";
 
 export default function ScoreScreen({
   state,
@@ -85,7 +87,23 @@ export default function ScoreScreen({
           <ExplainBars features={s.features} />
         </div>
 
-        <div className="anim-rise mt-4 rounded-3xl bg-teal-light p-5" style={{ animationDelay: "200ms" }}>
+        <div className="anim-rise mt-4 rounded-3xl bg-white p-5 shadow-[0_12px_32px_rgba(14,90,138,0.12)]" style={{ animationDelay: "160ms" }}>
+          <h4 className="text-sm font-extrabold text-deep">Data di balik skormu</h4>
+          <p className="mb-3 mt-0.5 text-[11px] text-slate-400">
+            Omzet QRIS mingguan, 90 hari terakhir — langsung dari transaksimu
+          </p>
+          <SalesChart transactions={state.transactions} />
+        </div>
+
+        <div className="anim-rise mt-4 rounded-3xl bg-white p-5 shadow-[0_12px_32px_rgba(14,90,138,0.12)]" style={{ animationDelay: "200ms" }}>
+          <h4 className="text-sm font-extrabold text-deep">🔮 Simulasi naik kelas</h4>
+          <p className="mb-3 mt-0.5 text-[11px] text-slate-400">
+            Apa yang terjadi pada skormu kalau usahamu tumbuh?
+          </p>
+          <WhatIf score={s} />
+        </div>
+
+        <div className="anim-rise mt-4 rounded-3xl bg-teal-light p-5" style={{ animationDelay: "240ms" }}>
           <h4 className="text-sm font-extrabold text-deep">💡 Cara naik tier</h4>
           <ul className="mt-2 space-y-1.5">
             {s.advice.map((a) => (
