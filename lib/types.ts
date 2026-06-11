@@ -1,6 +1,6 @@
 import type { KycLevel, ScoreResult } from "./engine";
 
-export type PersonaId = "budi" | "sari" | "andi" | "rini";
+export type PersonaId = "budi" | "sari" | "andi" | "rini" | "dewi";
 
 export type TxType =
   | "QRIS_IN" // penjualan masuk via QRIS
@@ -30,6 +30,8 @@ export interface Loan {
   totalDue: number;
   /** AstraPoints yang ditukar untuk diskon fee pinjaman ini */
   pointsUsed: number;
+  /** epoch ms saat lunas */
+  paidAt?: number;
 }
 
 export interface PersonaProfile {
@@ -53,6 +55,8 @@ export interface AppState {
   loansRepaidOnTime: number;
   transactions: Tx[];
   loan: Loan | null;
+  /** Modal Jalan yang sudah selesai (ledger) */
+  loanHistory: Loan[];
   score: ScoreResult;
   /** Penanda provider pembayaran yang terakhir dipakai (untuk badge UI) */
   provider: "mock" | "sandbox";

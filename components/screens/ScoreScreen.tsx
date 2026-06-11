@@ -8,6 +8,8 @@ import ScoreGauge from "../ScoreGauge";
 import ExplainBars from "../ExplainBars";
 import SalesChart from "../SalesChart";
 import WhatIf from "../WhatIf";
+import TierJourney from "../TierJourney";
+import ScoreAudit from "../ScoreAudit";
 
 export default function ScoreScreen({
   state,
@@ -41,6 +43,8 @@ export default function ScoreScreen({
               termasuk bonus pelunasan +{s.bonus} poin
             </p>
           )}
+
+          <TierJourney score={s.score} tier={s.tier} />
 
           <div className="mt-4 flex items-center justify-between rounded-2xl bg-gradient-to-r from-deep to-teal px-5 py-4 text-white">
             <div>
@@ -85,6 +89,7 @@ export default function ScoreScreen({
             Kontribusi tiap faktor — transparan & bisa diverifikasi
           </p>
           <ExplainBars features={s.features} />
+          <ScoreAudit score={s} />
         </div>
 
         <div className="anim-rise mt-4 rounded-3xl bg-white p-5 shadow-[0_12px_32px_rgba(14,90,138,0.12)]" style={{ animationDelay: "160ms" }}>
