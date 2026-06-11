@@ -31,11 +31,24 @@ export interface DisburseResult {
   error?: string;
 }
 
+// Loop loyalitas AstraPoints: poin hasil pelunasan bisa ditukar diskon fee
+// untuk Modal Jalan berikutnya — insentif nyata untuk terus melunasi.
+export const POINTS_REDEEM_COST = 250;
+export const POINTS_FEE_DISCOUNT = 0.005; // -0,5% fee
+export const MIN_FEE_RATE = 0.005;
+
+export function effectiveFeeRate(baseFeeRate: number, usePoints: boolean): number {
+  return usePoints
+    ? Math.max(baseFeeRate - POINTS_FEE_DISCOUNT, MIN_FEE_RATE)
+    : baseFeeRate;
+}
+
 /** §5 — cairkan Modal Jalan: outstanding = principal * (1 + feeRate) */
 export function applyDisbursement(
   state: AppState,
   amount: number,
-  now = Date.now()
+  now = Date.now(),
+  usePoints = false
 ): DisburseResult {
   if (state.loan && state.loan.status === "ACTIVE") {
     return { state, error: "Masih ada Modal Jalan aktif. Lunasi dulu sebelum mengajukan lagi." };
@@ -46,19 +59,23 @@ export function applyDisbursement(
   if (amount > state.score.limit) {
     return { state, error: "Nominal melebihi plafon yang tersedia." };
   }
-  const feeRate = state.score.tier.feeRate;
+  const redeem = usePoints && state.points >= POINTS_REDEEM_COST;
+  const feeRate = effectiveFeeRate(state.score.tier.feeRate, redeem);
   const totalDue = Math.round(amount * (1 + feeRate));
   const tx: Tx = {
     id: `loan-${now.toString(36)}`,
     type: "LOAN_IN",
     amount,
     ts: now,
-    note: "Pencairan Modal Jalan",
+    note: redeem
+      ? `Pencairan Modal Jalan (fee didiskon ${POINTS_REDEEM_COST} poin)`
+      : "Pencairan Modal Jalan",
   };
   return {
     state: {
       ...state,
       balance: state.balance + amount,
+      points: redeem ? state.points - POINTS_REDEEM_COST : state.points,
       loan: {
         principal: amount,
         feeRate,
@@ -67,6 +84,7 @@ export function applyDisbursement(
         repaymentRate: REPAYMENT_RATE,
         status: "ACTIVE",
         createdAt: now,
+        pointsUsed: redeem ? POINTS_REDEEM_COST : 0,
       },
       transactions: [...state.transactions, tx],
     },

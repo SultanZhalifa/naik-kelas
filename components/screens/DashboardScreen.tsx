@@ -17,12 +17,14 @@ export default function DashboardScreen({
   onReceiveQris,
   onReset,
   onViewScore,
+  onApplyAgain,
 }: {
   state: AppState;
   busy: boolean;
   onReceiveQris: (amount: number) => void;
   onReset: () => void;
   onViewScore: () => void;
+  onApplyAgain: () => void;
 }) {
   const [amount, setAmount] = useState(250_000);
   const [custom, setCustom] = useState("");
@@ -99,7 +101,21 @@ export default function DashboardScreen({
             <p className="mt-2 text-[10px] text-slate-400">
               Pokok {formatRp(loan.principal)} + fee → total {formatRp(loan.totalDue)} ·
               otomatis dipotong {Math.round(loan.repaymentRate * 100)}% dari tiap penjualan QRIS
+              {loan.pointsUsed > 0 && ` · ✦ fee didiskon ${loan.pointsUsed} poin`}
             </p>
+            {state.loansRepaidOnTime > 0 && (
+              <p className="mt-2 inline-block rounded-full bg-gold/15 px-2.5 py-1 text-[10px] font-bold text-amber-600">
+                🏅 {state.loansRepaidOnTime}× lunas tepat waktu
+              </p>
+            )}
+            {loan.status === "LUNAS" && (
+              <button
+                onClick={onApplyAgain}
+                className="mt-3 w-full rounded-2xl bg-gradient-to-r from-deep to-teal py-3 text-xs font-bold text-white transition active:scale-[0.98]"
+              >
+                🚀 Ajukan lagi — plafonmu kini {formatRp(state.score.limit)}
+              </button>
+            )}
           </div>
         )}
 

@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   }
   const amount = Number(body.amount);
 
-  const result = applyDisbursement(state, amount);
+  const result = applyDisbursement(state, amount, Date.now(), body.usePoints === true);
   if (result.error) {
     return Response.json({ error: result.error }, { status: 400 });
   }

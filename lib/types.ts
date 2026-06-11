@@ -28,6 +28,8 @@ export interface Loan {
   createdAt: number;
   /** total yang harus dikembalikan = principal * (1 + feeRate) */
   totalDue: number;
+  /** AstraPoints yang ditukar untuk diskon fee pinjaman ini */
+  pointsUsed: number;
 }
 
 export interface PersonaProfile {

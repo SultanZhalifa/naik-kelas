@@ -74,14 +74,14 @@ export default function App() {
     }
   }, [personaId, fail]);
 
-  // §8.4 — cairkan Modal Jalan
+  // §8.4 — cairkan Modal Jalan (opsional: tukar AstraPoints untuk diskon fee)
   const disburse = useCallback(
-    async (amount: number) => {
+    async (amount: number, usePoints: boolean) => {
       if (!state) return;
       setBusy(true);
       try {
         const [data] = await Promise.all([
-          api<{ state: AppState }>("/api/loan", { state, amount }),
+          api<{ state: AppState }>("/api/loan", { state, amount, usePoints }),
           sleep(900),
         ]);
         setState(data.state);
@@ -209,6 +209,7 @@ export default function App() {
             setGaugeFrom(undefined);
             setScreen("score");
           }}
+          onApplyAgain={() => setScreen("disburse")}
         />
       )}
 

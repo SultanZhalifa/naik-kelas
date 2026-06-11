@@ -112,6 +112,36 @@ describe("split repayment & loop reward (§5–§6)", () => {
     expect(state.score.limit).toBeGreaterThan(before.limit);
   });
 
+  it("tukar AstraPoints memberi diskon fee dan memotong saldo poin", () => {
+    // siklus 1: pinjam-lunasi untuk mengumpulkan poin
+    let state = createSession("sari", NOW);
+    state = applyDisbursement(state, 500_000, NOW).state;
+    let guard = 0;
+    while (state.loan!.status === "ACTIVE" && guard++ < 10) {
+      state = applyQrisPayment(state, 1_000_000, NOW + guard * 1000).state;
+    }
+    expect(state.points).toBe(500);
+    const baseFee = state.score.tier.feeRate;
+
+    // siklus 2: pinjam lagi dengan menukar 250 poin
+    const r = applyDisbursement(state, 1_000_000, NOW + 99_000, true);
+    expect(r.error).toBeUndefined();
+    expect(r.state.points).toBe(250);
+    expect(r.state.loan!.pointsUsed).toBe(250);
+    expect(r.state.loan!.feeRate).toBeCloseTo(Math.max(baseFee - 0.005, 0.005));
+    expect(r.state.loan!.totalDue).toBe(
+      Math.round(1_000_000 * (1 + r.state.loan!.feeRate))
+    );
+  });
+
+  it("usePoints diabaikan bila poin tidak cukup", () => {
+    const state = createSession("budi", NOW);
+    const r = applyDisbursement(state, 200_000, NOW, true);
+    expect(r.state.points).toBe(0);
+    expect(r.state.loan!.pointsUsed).toBe(0);
+    expect(r.state.loan!.feeRate).toBe(state.score.tier.feeRate);
+  });
+
   it("tidak bisa mencairkan melebihi plafon atau saat pinjaman aktif", () => {
     const state = createSession("budi", NOW);
     expect(applyDisbursement(state, state.score.limit + 50_000, NOW).error).toBeDefined();

@@ -29,6 +29,12 @@ await page.getByRole("button", { name: /Ajukan Modal Jalan/ }).waitFor({ timeout
 await page.waitForTimeout(1400); // animasi gauge & bar selesai
 await shot("3b-score");
 
+// kartu baru: grafik omzet + simulasi what-if (screenshot frame resolusi penuh)
+const frame = page.locator("div.rounded-\\[2rem\\]");
+await page.getByText("Simulasi naik kelas").scrollIntoViewIfNeeded();
+await page.waitForTimeout(1100);
+await frame.screenshot({ path: "shots/3c-score-extras.png" });
+
 console.log("4. Cairkan Modal Jalan 500rb…");
 await page.getByRole("button", { name: /Ajukan Modal Jalan/ }).click();
 await page.waitForTimeout(400);
@@ -70,6 +76,16 @@ await shot("7-celebration");
 await page.getByRole("button", { name: /Lihat skor baruku/ }).click();
 await page.waitForTimeout(1600);
 await shot("8-score-after");
+
+console.log("7. Loop kedua: ajukan lagi + tukar AstraPoints…");
+await page.getByRole("button", { name: /Lihat dashboard arus kas/ }).click();
+await page.waitForTimeout(500);
+await frame.screenshot({ path: "shots/9-dashboard-lunas.png" });
+await page.getByRole("button", { name: /Ajukan lagi/ }).click();
+await page.getByRole("button", { name: /Tukar 250 AstraPoints/ }).waitFor({ timeout: 5_000 });
+await page.getByRole("button", { name: /Tukar 250 AstraPoints/ }).click();
+await page.waitForTimeout(400);
+await frame.screenshot({ path: "shots/10-disburse-points.png" });
 
 await browser.close();
 console.log("✅ Selesai — screenshot di folder shots/");
