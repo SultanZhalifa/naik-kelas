@@ -1,4 +1,5 @@
-// Data persona sintetis (§7): 4 merchant dengan ~90 hari riwayat transaksi.
+// Data persona sintetis (§7): 4 merchant sesuai spec + 1 persona thin-file
+// (Dewi) untuk cerita inklusi. Masing-masing ~90 hari riwayat transaksi.
 // Transaksi digenerate deterministik (seeded) sehingga statistik turunannya
 // (avg, stdev, count, growth) mendekati parameter spec — skor TIDAK dihardcode,
 // selalu dihitung ulang dari daftar transaksi oleh engine.

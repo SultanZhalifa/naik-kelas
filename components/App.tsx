@@ -131,6 +131,7 @@ export default function App() {
 
         if (data.celebration) {
           await sleep(650);
+          setToast(null); // jangan tutupi layar perayaan
           setCelebration(data.celebration);
         }
       } catch (err) {
@@ -180,6 +181,7 @@ export default function App() {
       );
       if (celeb) {
         await sleep(650);
+        setToast(null); // jangan tutupi layar perayaan
         setCelebration(celeb);
       }
     } catch (err) {

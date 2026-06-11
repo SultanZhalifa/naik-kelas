@@ -12,6 +12,20 @@ const LOADING_STEPS = [
   "Menghitung AstraScore…",
 ];
 
+/** Teks langkah loading; mount/unmount mengikuti `connecting` sehingga
+ *  state langkah otomatis ter-reset tanpa setState sinkron di effect. */
+function LoadingSteps() {
+  const [step, setStep] = useState(0);
+  useEffect(() => {
+    const iv = setInterval(
+      () => setStep((s) => Math.min(s + 1, LOADING_STEPS.length - 1)),
+      600
+    );
+    return () => clearInterval(iv);
+  }, []);
+  return <>{LOADING_STEPS[step]}</>;
+}
+
 export default function ConsentScreen({
   personaId,
   connecting,
@@ -24,19 +38,6 @@ export default function ConsentScreen({
   onBack: () => void;
 }) {
   const p = PERSONAS[personaId].profile;
-  const [step, setStep] = useState(0);
-
-  useEffect(() => {
-    if (!connecting) {
-      setStep(0);
-      return;
-    }
-    const iv = setInterval(
-      () => setStep((s) => Math.min(s + 1, LOADING_STEPS.length - 1)),
-      600
-    );
-    return () => clearInterval(iv);
-  }, [connecting]);
 
   return (
     <div className="frame-scroll flex flex-1 flex-col overflow-y-auto">
@@ -90,7 +91,7 @@ export default function ConsentScreen({
             disabled={connecting}
             className="anim-pulse-ring mt-5 w-full rounded-2xl bg-gradient-to-r from-deep to-teal py-3.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-80"
           >
-            {connecting ? LOADING_STEPS[step] : "Hubungkan data transaksi saya"}
+            {connecting ? <LoadingSteps /> : "Hubungkan data transaksi saya"}
           </button>
           <p className="mt-3 text-center text-[10px] leading-relaxed text-slate-400">
             Dengan menghubungkan, kamu menyetujui pemakaian data transaksimu
