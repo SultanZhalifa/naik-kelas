@@ -67,6 +67,10 @@ Kerangka pitch deck + antisipasi Q&A: lihat [PITCH.md](PITCH.md).
 - API routes: `POST /api/session`, `/api/loan`, `/api/qris`, `/api/qris/pay`,
   `/api/reset`. State sesi in-memory di server; tiap request membawa snapshot
   klien sehingga cold start serverless tidak mematahkan demo.
+  Snapshot itu ditandatangani HMAC dengan env `STATE_SECRET` (lihat
+  [lib/store.ts](lib/store.ts)), jadi skor, plafon, dan saldo tidak bisa
+  diubah dari browser. Set `STATE_SECRET` (string acak panjang) di Vercel;
+  tanpa itu snapshot diterima tanpa verifikasi.
 
 ## Integrasi Sandbox
 

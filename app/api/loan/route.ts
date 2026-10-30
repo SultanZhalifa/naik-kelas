@@ -20,6 +20,5 @@ export async function POST(request: Request) {
   const disb = await getProvider().disburse(amount, state.profile.name);
   result.state.provider = disb.provider;
 
-  saveSession(result.state);
-  return Response.json({ state: result.state, disbursement: disb });
+  return Response.json({ state: saveSession(result.state), disbursement: disb });
 }

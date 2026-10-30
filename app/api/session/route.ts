@@ -10,6 +10,5 @@ export async function POST(request: Request) {
     return Response.json({ error: "personaId tidak valid" }, { status: 400 });
   }
   const state = createSession(personaId);
-  saveSession(state);
-  return Response.json({ state });
+  return Response.json({ state: saveSession(state) });
 }
