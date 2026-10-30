@@ -13,7 +13,7 @@ export function createSession(personaId: PersonaId, now = Date.now()): AppState 
   const transactions = generateTransactions(personaId, now);
   const score = computeScore(deriveStats(transactions, profile, 0, now));
   return {
-    sessionId: `${personaId}-${now.toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+    sessionId: `${personaId}-${crypto.randomUUID()}`,
     personaId,
     profile,
     balance: initialBalance(personaId),

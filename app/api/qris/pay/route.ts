@@ -23,6 +23,5 @@ export async function POST(request: Request) {
     typeof body.trxId === "string" ? body.trxId : undefined
   );
 
-  saveSession(next);
-  return Response.json({ state: next, cut, celebration });
+  return Response.json({ state: saveSession(next), cut, celebration });
 }

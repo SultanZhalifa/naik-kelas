@@ -60,6 +60,8 @@ export interface AppState {
   score: ScoreResult;
   /** Penanda provider pembayaran yang terakhir dipakai (untuk badge UI) */
   provider: "mock" | "sandbox";
+  /** Tanda tangan HMAC dari server (lib/store.ts); jangan diubah di klien */
+  sig?: string;
 }
 
 /** Payload perayaan saat pinjaman lunas — dipakai layar "Naik Kelas" */
