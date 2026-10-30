@@ -10,7 +10,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "next": "16.2.9",
+    "next": "^16.4.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-qr-code": "^2.2.0"
@@ -21,7 +21,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.9",
+    "eslint-config-next": "^16.4.3",
     "playwright": "^1.60.0",
     "tailwindcss": "^4",
     "typescript": "^5",
